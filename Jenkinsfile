@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        label 'jen-node1'
+    }
 
     stages {
         stage('Pull') {
