@@ -4,13 +4,14 @@ pipeline {
     stages {
         stage('Pull') {
             steps {
-                git branch: 'main', url: 'https://github.com/AnjaliDapke10/Fertilizer-Shop-Management-System.git'
+                git branch: 'main', url: 'https://github.com/SurajBele/studentdata.git'
                 echo "Git Pull Successful"
             }
         }
 
         stage('Build') {
             steps {
+                sh '/opt/apache-maven-3.9.11/bin/mvn clean package'
                 echo "Build Successful"
             }
         }
