@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'jen-node1'
+        label "jen-node1"
     }
 
     stages {
