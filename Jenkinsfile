@@ -20,6 +20,8 @@ pipeline {
 
         stage('Test') {
             steps {
+                withSonarQubeEnv(installationName: 'Sonar-DB-Server', credentialsId: 'sonarqube-token') {
+                sh '/opt/apache-maven-3.10.0/bin/mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar   -Dsonar.projectKey=Student-Data-Project'
                 echo "Test Successful"
             }
         }
