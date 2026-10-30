@@ -36,20 +36,16 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+                stage('Deploy') {
             steps {
-                // 1. Generate a clean Dockerfile using Tomcat's ROOT auto-deployment mechanism
-                writeFile file: 'Dockerfile', text: '''
+                // 1. Generate the Dockerfile using shell heredoc syntax
+                sh '''
+                    cat <<EOF > Dockerfile
                     FROM tomcat:9.0-jdk17-openjdk-slim
-                    
-                    # Clear default webapps out
                     RUN rm -rf /usr/local/tomcat/webapps/*
-                    
-                    # Copy the war file as ROOT.war so it serves directly at the base URL (http://<IP>:8081/)
                     COPY target/*.war /usr/local/tomcat/webapps/ROOT.war
-                    
                     EXPOSE 8080
-                    CMD ["catalina.sh", "run"]
+                    EOF
                 '''
                 
                 // 2. Stop and clear out the old app container instances
@@ -63,6 +59,7 @@ pipeline {
                 echo "Deploy Successful"
             }
         }
+
 
     }
 }
