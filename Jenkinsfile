@@ -6,6 +6,7 @@ pipeline {
     stages {
         stage('Pull') {
             steps {
+                sh 'whoami'
                 git branch: 'main', url: 'https://github.com/SurajBele/studentdata.git'
                 echo "Git Pull Successful"
             }
