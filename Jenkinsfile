@@ -38,6 +38,23 @@ pipeline {
 
         stage('Deploy') {
             steps {
+                // 1. Dynamically generate the Dockerfile in the Jenkins workspace directory
+                writeFile file: 'Dockerfile', text: '''
+                    FROM tomcat:9.0-jdk11-openjdk-slim
+                    RUN rm -rf /usr/local/tomcat/webapps/*
+                    COPY target/*.war /usr/local/tomcat/webapps/studentdata.war
+                    EXPOSE 8080
+                    CMD ["catalina.sh", "run"]
+                '''
+                
+                // 2. Clear old running instances to avoid port conflicts
+                sh 'docker stop studentapp || true'
+                sh 'docker rm studentapp || true'
+                
+                // 3. Build and launch the container
+                sh 'docker build -t student-data-image:latest .'
+                sh 'docker run -d --name studentapp -p 8081:8080 student-data-image:latest'
+                
                 echo "Deploy Successful"
             }
         }
