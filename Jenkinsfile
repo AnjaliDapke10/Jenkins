@@ -36,29 +36,23 @@ pipeline {
             }
         }
 
-                stage('Deploy') {
+                        stage('Deploy') {
             steps {
-                // 1. Generate the Dockerfile using shell heredoc syntax
+                // Alternative safe echo writing style
                 sh '''
-                    cat <<EOF > Dockerfile
-                    FROM tomcat:9.0-jdk17-openjdk-slim
-                    RUN rm -rf /usr/local/tomcat/webapps/*
-                    COPY target/*.war /usr/local/tomcat/webapps/ROOT.war
-                    EXPOSE 8080
-                    EOF
+                    echo "FROM tomcat:9.0-jdk17-openjdk-slim" > Dockerfile
+                    echo "RUN rm -rf /usr/local/tomcat/webapps/*" >> Dockerfile
+                    echo "COPY target/*.war /usr/local/tomcat/webapps/ROOT.war" >> Dockerfile
+                    echo "EXPOSE 8080" >> Dockerfile
                 '''
                 
-                // 2. Stop and clear out the old app container instances
                 sh 'docker stop studentapp || true'
                 sh 'docker rm studentapp || true'
-                
-                // 3. Rebuild image and launch container
                 sh 'docker build -t student-data-image:latest .'
                 sh 'docker run -d --name studentapp -p 8081:8080 student-data-image:latest'
-                
-                echo "Deploy Successful"
             }
         }
+
 
 
     }
