@@ -38,15 +38,15 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // 1. Generate the Dockerfile without complex escape slashes
+                // 1. Generate a clean Dockerfile using Tomcat's ROOT auto-deployment mechanism
                 writeFile file: 'Dockerfile', text: '''
                     FROM tomcat:9.0-jdk17-openjdk-slim
-                    RUN rm -rf /usr/local/tomcat/webapps/*
-                    COPY target/*.war /usr/local/tomcat/webapps/studentdata.war
                     
-                    # Create a default ROOT application to automatically redirect traffic
-                    RUN mkdir /usr/local/tomcat/webapps/ROOT
-                    RUN echo '<% response.sendRedirect(request.getContextPath() + "/studentdata/index.jsp"); %>' > /usr/local/tomcat/webapps/ROOT/index.jsp
+                    # Clear default webapps out
+                    RUN rm -rf /usr/local/tomcat/webapps/*
+                    
+                    # Copy the war file as ROOT.war so it serves directly at the base URL (http://<IP>:8081/)
+                    COPY target/*.war /usr/local/tomcat/webapps/ROOT.war
                     
                     EXPOSE 8080
                     CMD ["catalina.sh", "run"]
