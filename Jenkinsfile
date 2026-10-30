@@ -6,14 +6,15 @@ pipeline {
     stages {
         stage('Pull') {
             steps {
-                git branch: 'main', url: 'https://github.com'
+                sh 'whoami'
+                git branch: 'main', url: 'https://github.com/SurajBele/studentdata.git'
                 echo "Git Pull Successful"
             }
         }
 
         stage('Build') {
             steps {
-                sh '/opt/apache-maven-3.10.0/bin/mvn clean package'
+                sh '/opt/apache-maven-3.10.0/bin/mvn  package'
                 echo "Build Successful"
             }
         }
@@ -21,15 +22,14 @@ pipeline {
         stage('Test') {
             steps {
                 withSonarQubeEnv(installationName: 'Sonar-DB-Server', credentialsId: 'sonarqube-token') {
-                    sh '/opt/apache-maven-3.10.0/bin/mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Student-Data-Project'
+                sh '/opt/apache-maven-3.10.0/bin/mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar   -Dsonar.projectKey=Student-Data-Project'
                 }
                 echo "Test Successful"
             }
         }
-
         stage('quality gate') {
             steps {
-                timeout(time: 5, unit: 'MINUTES') {
+                timeout(time: 1, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
                 echo "gate pass successful"
@@ -63,5 +63,6 @@ pipeline {
                 echo "Deploy Successful"
             }
         }
+
     }
 }
