@@ -33,6 +33,7 @@ pipeline {
                 }
                 echo "gate pass successful"
             }
+        }
 
         stage('Deploy') {
             steps {
