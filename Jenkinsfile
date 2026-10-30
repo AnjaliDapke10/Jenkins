@@ -43,7 +43,7 @@ pipeline {
                     FROM tomcat:9.0-jdk21-openjdk-slim
                     RUN rm -rf /usr/local/tomcat/webapps/*
                     COPY target/*.war /usr/local/tomcat/webapps/studentdata.war
-                    RUN sed -i "/<\/web-app>/i <welcome-file-list><welcome-file>index.jsp<\/welcome-file><\/welcome-file-list>" /usr/local/tomcat/conf/web.xml
+                    
                     EXPOSE 8080
                     CMD ["catalina.sh", "run"]
                 '''
