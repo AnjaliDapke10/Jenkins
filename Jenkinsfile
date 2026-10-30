@@ -40,7 +40,7 @@ pipeline {
             steps {
                 // 1. Dynamically generate the Dockerfile in the Jenkins workspace directory
                 writeFile file: 'Dockerfile', text: '''
-                    FROM tomcat:9.0-jdk11-openjdk-slim
+                    FROM tomcat:9.0-jdk17-openjdk-slim
                     RUN rm -rf /usr/local/tomcat/webapps/*
                     COPY target/*.war /usr/local/tomcat/webapps/studentdata.war
                     EXPOSE 8080
